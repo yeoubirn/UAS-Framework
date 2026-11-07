@@ -5,7 +5,7 @@
             <div class="flex items-center gap-6">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ url('/') }}" class="flex items-center gap-3">
+                    <a href="{{ Auth::check() && Auth::user()->isAdmin() ? route('admin.services.index') : url('/') }}" class="flex items-center gap-3">
                         <img src="{{ asset('images/logo.png') }}" alt="Narendra Media" class="h-10 w-auto object-contain">
                         <span class="font-heading font-bold text-lg text-content-primary hidden sm:inline-block">Narendra Media</span>
                     </a>
@@ -16,6 +16,18 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @auth
+                        @if (Auth::user()->isAdmin())
+                            <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">
+                                {{ __('Layanan') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                                {{ __('Pesanan') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -84,6 +96,18 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @auth
+                @if (Auth::user()->isAdmin())
+                    <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">
+                        {{ __('Layanan') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                        {{ __('Pesanan') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         @auth
