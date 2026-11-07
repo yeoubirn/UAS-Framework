@@ -13,6 +13,10 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:flex">
+                    <x-nav-link :href="url('/')" :active="request()->is('/')">
+                        {{ __('Beranda') }}
+                    </x-nav-link>
+
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
@@ -25,6 +29,10 @@
 
                             <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
                                 {{ __('Pesanan') }}
+                            </x-nav-link>
+                        @else
+                            <x-nav-link :href="route('orders.my')" :active="request()->routeIs('orders.my')">
+                                {{ __('Pesanan Saya') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -52,6 +60,12 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profil Saya') }}
                             </x-dropdown-link>
+
+                            @if (!Auth::user()->isAdmin())
+                                <x-dropdown-link :href="route('orders.my')">
+                                    {{ __('Pesanan Saya') }}
+                                </x-dropdown-link>
+                            @endif
 
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
@@ -93,6 +107,10 @@
     <!-- Responsive Navigation Menu (Mobile) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-surface-border bg-white">
         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="url('/')" :active="request()->is('/')">
+                {{ __('Beranda') }}
+            </x-responsive-nav-link>
+
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
@@ -105,6 +123,10 @@
 
                     <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
                         {{ __('Pesanan') }}
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link :href="route('orders.my')" :active="request()->routeIs('orders.my')">
+                        {{ __('Pesanan Saya') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth
@@ -122,6 +144,12 @@
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Profil Saya') }}
                     </x-responsive-nav-link>
+
+                    @if (!Auth::user()->isAdmin())
+                        <x-responsive-nav-link :href="route('orders.my')">
+                            {{ __('Pesanan Saya') }}
+                        </x-responsive-nav-link>
+                    @endif
 
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">

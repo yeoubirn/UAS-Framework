@@ -1,59 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Narendra Media
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web profil usaha, katalog layanan, dan pemesanan online untuk **Narendra Media** — usaha jasa dan rental multimedia (rental proyektor, pemasangan CCTV, serta instalasi WiFi & jaringan internet perkantoran dan sekolah) di Tulungagung, Jawa Timur.
 
-## About Laravel
+Proyek ini dikembangkan sebagai Tugas UAS **Workshop Pemrograman Framework** dengan prinsip kode yang sederhana, bersih, dan mudah dijelaskan oleh mahasiswa.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Tech Stack
+- **Framework:** Laravel 12
+- **Template Engine:** Blade & Blade Components
+- **Styling:** Tailwind CSS (via Laravel Breeze)
+- **Database:** SQLite
+- **Font:** Poppins (Heading) & Inter (Body)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Fitur Utama
+1. **Autentikasi & Multi-role:**
+   - Registrasi dan Login dengan dua peran: **Admin** dan **Pelanggan**.
+   - Input nomor HP saat registrasi.
+   - Hak akses rute dan menu navbar yang terisolasi sesuai peran.
+2. **Katalog Layanan (Beranda):**
+   - Halaman beranda `/` menyajikan daftar layanan yang dikelompokkan per kategori (*Rental Proyektor*, *Pasang CCTV*, *WiFi dan Jaringan*).
+   - Menggunakan komponen kartu `<x-service-card>` yang memuat gambar/ilustrasi, nama layanan, badge kategori, tipe layanan, deskripsi singkat, tarif harga, dan tombol "Lihat Detail".
+3. **Detail Layanan & Form Pemesanan Langsung:**
+   - Halaman `/layanan/{service}` menampilkan deskripsi lengkap layanan, tarif satuan, dan formulir pemesanan online (satu pesanan = satu layanan).
+   - Form pemesanan mencakup input jumlah unit, tanggal pelaksanaan/pemasangan, alamat lengkap, dan catatan opsional.
+   - Hanya user yang login yang dapat memesan. Pengunjung yang belum login akan diarahkan untuk masuk ke akun terlebih dahulu.
+   - Validasi data menggunakan Form Request (`StoreOrderRequest`).
+   - Total biaya pesanan dihitung secara aman di sisi server (`harga x jumlah`).
+   - Status awal pesanan otomatis diatur ke `pending`.
+4. **Halaman "Pesanan Saya":**
+   - Halaman `/pesanan-saya` bagi pelanggan untuk memantau status pesanan pribadi secara real-time.
+   - Dilengkapi badge status berwarna (*Pending*, *Dikonfirmasi*, *Selesai*, *Ditolak*).
+   - Privasi dan keamanan data terjamin: pelanggan hanya dapat melihat pesanannya sendiri dan tidak dapat melihat pesanan pelanggan lain.
+   - Tombol menu navigasi **"Pesanan Saya"** tersedia di navbar khusus pelanggan.
+5. **Panel Admin - CRUD Layanan:**
+   - Admin dapat menambah layanan baru, mengubah data layanan, melihat daftar layanan, dan menghapus layanan.
+6. **Panel Admin - Kelola Pesanan:**
+   - Admin dapat melihat seluruh daftar pesanan pelanggan yang masuk beserta detailnya, serta memperbarui status pesanan (*Pending*, *Dikonfirmasi*, *Selesai*, *Ditolak*).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Cara Instalasi
 
-## Laravel Sponsors
+Ikuti langkah-langkah berikut untuk menjalankan proyek di lingkungan lokal:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. **Clone repository dan masuk ke direktori proyek:**
+   ```bash
+   git clone <url-repository>
+   cd "Project UAS"
+   ```
 
-### Premium Partners
+2. **Pasang dependensi PHP melalui Composer:**
+   ```bash
+   composer install
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+3. **Salin berkas konfigurasi lingkungan (.env):**
+   - Di Windows (PowerShell / Command Prompt):
+     ```bash
+     copy .env.example .env
+     ```
+   - Di Linux / macOS / Bash:
+     ```bash
+     cp .env.example .env
+     ```
 
-## Contributing
+4. **Generate Application Key:**
+   ```bash
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Jalankan migrasi database beserta seeder awal:**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-## Code of Conduct
+6. **Pasang dependensi frontend:**
+   ```bash
+   npm install
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. **Kompilasi asset frontend (Tailwind CSS & JavaScript):**
+   ```bash
+   npm run build
+   ```
 
-## Security Vulnerabilities
+8. **Jalankan server lokal Laravel:**
+   ```bash
+   php artisan serve
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+9. Buka peramban (browser) di tautan:
+   [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 👥 Akun Demo
+
+Database seeder telah menyediakan dua akun demo siap pakai:
+
+| Peran (Role) | Email | Password | Keterangan |
+|---|---|---|---|
+| **Admin** | `admin@narendramedia.test` | `password` | Mengelola data layanan dan memperbarui status pesanan |
+| **Pelanggan** | `pelanggan@narendramedia.test` | `password` | Memesan layanan dan melihat riwayat di "Pesanan Saya" |
+
+---
+
+## 🧪 Menjalankan Pengujian (Testing)
+
+Untuk memastikan seluruh fitur dan spesifikasi berjalan normal, jalankan perintah pengujian:
+
+```bash
+php artisan test
+```
+
+---
+
+## 📍 Informasi Usaha
+- **Nama Usaha:** Narendra Media
+- **Layanan:** Rental Proyektor Layar Besar, Pasang Paket & Jasa CCTV, Instalasi WiFi & Jaringan Internet Kantor/Sekolah
+- **Alamat:** Bulu, Tanggulwelahan, Kec. Besuki, Kabupaten Tulungagung, Jawa Timur 66275
+- **Jam Operasional:** Buka 24 Jam
+- **Kontak / Email:** ekowawan818@gmail.com
