@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="font-heading font-bold text-lg text-navy leading-[1.3]">
-            {{ __('Informasi Profil') }}
+        <h2 class="font-heading font-semibold text-lg text-navy leading-[1.3]">
+            {{ __('Informasi profil') }}
         </h2>
 
-        <p class="mt-1 text-sm text-content-secondary">
+        <p class="mt-1 text-sm text-content-secondary leading-relaxed">
             {{ __('Perbarui informasi profil dan alamat email akun Anda.') }}
         </p>
     </header>
@@ -13,12 +13,12 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-5">
         @csrf
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Nama Lengkap')" />
+            <x-input-label for="name" :value="__('Nama lengkap')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
@@ -47,7 +47,7 @@
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 pt-1">
             <x-primary-button>{{ __('Simpan') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
