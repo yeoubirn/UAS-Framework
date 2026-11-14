@@ -39,22 +39,31 @@ Profesional, bersih, modern, ramah. Mobile-first.
 ## Palet warna
 | Peran | Warna |
 |---|---|
-| Primary | #1D4ED8 |
-| Primary gelap | #1E3A8A |
-| Aksen / tombol utama | #F59E0B |
-| Background | #F8FAFC |
+| Primary (cyan) | #06B6D4 |
+| Primary gelap | #0891B2 |
+| Navy (hero, footer, teks judul) | #0B1F4B |
+| Aksen / tombol utama | #F97316 |
+| Background halaman | #F0F9FF |
 | Kartu | #FFFFFF |
+| Border | #BAE6FD |
 | Teks utama | #0F172A |
-| Teks sekunder | #64748B |
-| Border | #E2E8F0 |
+| Teks sekunder | #475569 |
+Kategori: Rental Proyektor = #7C3AED, Pasang CCTV = #EA580C, WiFi dan Jaringan = #0891B2  
 Status: pending = #F59E0B, dikonfirmasi = #2563EB, selesai = #16A34A, ditolak = #DC2626
 
 ## Tipografi
-Judul: Poppins. Isi: Inter.
+Judul: Poppins (line-height ~1.3, tanpa tracking-tight berlebihan). Isi: Inter.
 
 ## UI
-Kartu layanan rounded-xl, bayangan tipis. Tombol utama warna aksen. Badge status berwarna.
-Navbar: logo, menu, hamburger di HP. Footer: alamat, jam buka, email.
+Kartu layanan rounded-lg, border 1px #BAE6FD, tanpa bayangan saat diam, bayangan tipis hanya saat hover.
+Placeholder gambar: blok warna solid sesuai kategori dengan nama kategori. Harga paling menonjol, tombol "Lihat Detail" ukuran penuh di bawah kartu.
+Label tipe ("Sewa" / "Jasa"): kotak kecil (rounded-md), latar solid warna kategori, teks putih, huruf kapital kecil dengan tracking lebar.
+Judul kategori: garis tebal 4px berwarna kategori di sisi kiri teks, tanpa lencana/ikon dalam lingkaran. Jumlah layanan: teks abu polos kecil ("X layanan") tanpa kotak.
+Hero beranda: rata kiri, latar navy solid dengan pola grid/garis halus, judul putih besar, satu paragraf spesifik, tombol "Lihat Layanan" (oranye) dan "Hubungi via WhatsApp" (outline putih).
+Baris info di bawah hero: polos dipisah garis tipis vertikal (Buka 24 jam | Besuki, Tulungagung | Alamat email).
+Navbar putih dengan border bawah 1px, menu aktif garis bawah cyan. Footer navy dengan teks terang.
+Tombol utama oranye solid (rounded-md), tombol sekunder outline cyan.
+Halaman login/register: latar navy, kartu putih di tengah dengan sudut rounded-lg.
 Teks UI Bahasa Indonesia. Format harga: Rp 450.000.
 
 ## Data seeder

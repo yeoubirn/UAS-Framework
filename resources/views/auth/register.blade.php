@@ -1,4 +1,13 @@
 <x-guest-layout>
+    <div class="mb-6">
+        <h1 class="font-heading font-bold text-2xl text-navy leading-[1.3]">
+            Daftar Akun Baru
+        </h1>
+        <p class="text-xs text-content-secondary mt-1">
+            Lengkapi data di bawah ini untuk mulai memesan layanan Narendra Media
+        </p>
+    </div>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -49,7 +58,7 @@
         </div>
 
         <div class="flex items-center justify-between mt-6">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" href="{{ route('login') }}">
+            <a class="text-xs text-content-secondary hover:text-navy underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" href="{{ route('login') }}">
                 {{ __('Sudah punya akun?') }}
             </a>
 

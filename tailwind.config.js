@@ -17,21 +17,31 @@ export default {
             },
             colors: {
                 primary: {
-                    DEFAULT: '#1D4ED8',
-                    dark: '#1E3A8A',
+                    DEFAULT: '#06B6D4',
+                    dark: '#0891B2',
+                },
+                navy: {
+                    DEFAULT: '#0B1F4B',
+                    dark: '#071533',
+                    light: '#132B66',
                 },
                 accent: {
-                    DEFAULT: '#F59E0B',
-                    hover: '#D97706',
+                    DEFAULT: '#F97316',
+                    hover: '#EA580C',
                 },
                 surface: {
-                    bg: '#F8FAFC',
+                    bg: '#F0F9FF',
                     card: '#FFFFFF',
-                    border: '#E2E8F0',
+                    border: '#BAE6FD',
                 },
                 content: {
                     primary: '#0F172A',
-                    secondary: '#64748B',
+                    secondary: '#475569',
+                },
+                category: {
+                    proyektor: '#7C3AED',
+                    cctv: '#EA580C',
+                    wifi: '#0891B2',
                 },
                 status: {
                     pending: '#F59E0B',

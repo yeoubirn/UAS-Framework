@@ -2,14 +2,14 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="font-heading font-bold text-2xl text-content-primary leading-tight">
+                <h2 class="font-heading font-bold text-2xl text-navy leading-[1.3]">
                     Edit Layanan: {{ $service->nama }}
                 </h2>
                 <p class="text-sm text-content-secondary mt-1">
                     Perbarui informasi layanan yang sudah ada
                 </p>
             </div>
-            <a href="{{ route('admin.services.index') }}" class="text-sm font-medium text-content-secondary hover:text-content-primary">
+            <a href="{{ route('admin.services.index') }}" class="text-sm font-medium text-content-secondary hover:text-navy">
                 &larr; Kembali
             </a>
         </div>
@@ -17,7 +17,7 @@
 
     <div class="py-8">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-xl shadow-sm border border-surface-border p-6 sm:p-8">
+            <div class="bg-surface-card rounded-lg border border-surface-border p-6 sm:p-8">
                 <form action="{{ route('admin.services.update', $service) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -32,7 +32,7 @@
                     <!-- Kategori Layanan -->
                     <div class="mb-5">
                         <x-input-label for="kategori" value="Kategori Layanan" />
-                        <select id="kategori" name="kategori" class="mt-1 block w-full border-surface-border rounded-lg shadow-sm focus:border-primary focus:ring-primary text-sm text-content-primary" required>
+                        <select id="kategori" name="kategori" class="mt-1 block w-full border-surface-border rounded-md shadow-sm focus:border-primary focus:ring-primary text-sm text-content-primary" required>
                             @foreach ($categories as $cat)
                                 <option value="{{ $cat }}" {{ old('kategori', $service->kategori) === $cat ? 'selected' : '' }}>
                                     {{ $cat }}
@@ -45,7 +45,7 @@
                     <!-- Tipe Layanan -->
                     <div class="mb-5">
                         <x-input-label for="tipe" value="Tipe Layanan" />
-                        <select id="tipe" name="tipe" class="mt-1 block w-full border-surface-border rounded-lg shadow-sm focus:border-primary focus:ring-primary text-sm text-content-primary" required>
+                        <select id="tipe" name="tipe" class="mt-1 block w-full border-surface-border rounded-md shadow-sm focus:border-primary focus:ring-primary text-sm text-content-primary" required>
                             <option value="sewa" {{ old('tipe', $service->tipe) === 'sewa' ? 'selected' : '' }}>Sewa (Rental)</option>
                             <option value="jasa" {{ old('tipe', $service->tipe) === 'jasa' ? 'selected' : '' }}>Jasa (Instalasi / Teknisi)</option>
                         </select>
@@ -70,13 +70,13 @@
                     <!-- Deskripsi -->
                     <div class="mb-6">
                         <x-input-label for="deskripsi" value="Deskripsi Lengkap" />
-                        <textarea id="deskripsi" name="deskripsi" rows="4" class="mt-1 block w-full border-surface-border rounded-lg shadow-sm focus:border-primary focus:ring-primary text-sm text-content-primary" required>{{ old('deskripsi', $service->deskripsi) }}</textarea>
+                        <textarea id="deskripsi" name="deskripsi" rows="4" class="mt-1 block w-full border-surface-border rounded-md shadow-sm focus:border-primary focus:ring-primary text-sm text-content-primary" required>{{ old('deskripsi', $service->deskripsi) }}</textarea>
                         <x-input-error class="mt-2" :messages="$errors->get('deskripsi')" />
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-surface-border">
-                        <a href="{{ route('admin.services.index') }}" class="px-4 py-2 border border-surface-border rounded-lg text-sm font-medium text-content-secondary hover:bg-gray-50 transition">
+                        <a href="{{ route('admin.services.index') }}" class="px-4 py-2 border border-surface-border rounded-md text-sm font-medium text-content-secondary hover:bg-gray-50 transition">
                             Batal
                         </a>
                         <x-primary-button>

@@ -54,7 +54,7 @@ class Sprint2Test extends TestCase
         $response->assertRedirect('/admin/services');
     }
 
-    public function test_customer_redirected_to_dashboard_after_login(): void
+    public function test_customer_redirected_to_home_after_login(): void
     {
         $response = $this->post('/login', [
             'email' => 'pelanggan@narendramedia.test',
@@ -62,7 +62,7 @@ class Sprint2Test extends TestCase
         ]);
 
         $this->assertAuthenticatedAs($this->customer);
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/');
     }
 
     public function test_admin_can_view_services_index(): void
@@ -193,11 +193,11 @@ class Sprint2Test extends TestCase
 
     public function test_admin_nav_menu_visible_only_to_admin(): void
     {
-        $adminView = $this->actingAs($this->admin)->get('/dashboard');
+        $adminView = $this->actingAs($this->admin)->get('/');
         $adminView->assertSee('Layanan');
         $adminView->assertSee('Pesanan');
 
-        $customerView = $this->actingAs($this->customer)->get('/dashboard');
+        $customerView = $this->actingAs($this->customer)->get('/');
         $customerView->assertDontSee('/admin/services');
         $customerView->assertDontSee('/admin/orders');
     }

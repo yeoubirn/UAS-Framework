@@ -190,12 +190,12 @@ class Sprint3Test extends TestCase
     public function test_navbar_shows_pesanan_saya_only_for_pelanggan(): void
     {
         // 1. Pelanggan melihat "Pesanan Saya" di navbar
-        $customerView = $this->actingAs($this->customer)->get('/dashboard');
+        $customerView = $this->actingAs($this->customer)->get('/');
         $customerView->assertSee('Pesanan Saya');
         $customerView->assertSee(route('orders.my'));
 
         // 2. Admin TIDAK melihat "Pesanan Saya", melainkan "Layanan" dan "Pesanan" admin
-        $adminView = $this->actingAs($this->admin)->get('/dashboard');
+        $adminView = $this->actingAs($this->admin)->get('/');
         $adminView->assertDontSee(route('orders.my'));
         $adminView->assertSee(route('admin.services.index'));
         $adminView->assertSee(route('admin.orders.index'));

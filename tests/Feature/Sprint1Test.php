@@ -24,7 +24,7 @@ class Sprint1Test extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('home', absolute: false));
 
         $user = User::where('email', 'ahmad@example.com')->first();
         $this->assertNotNull($user);

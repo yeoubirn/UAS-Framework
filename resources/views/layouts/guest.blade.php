@@ -14,16 +14,16 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-surface-bg text-content-primary">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4">
-            <div>
+    <body class="font-sans antialiased bg-navy text-content-primary">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-8 sm:pt-0 px-4 py-8 bg-hero-grid">
+            <div class="mb-6">
                 <a href="/" class="flex flex-col items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}" alt="Narendra Media" class="h-16 w-auto object-contain">
-                    <span class="font-heading font-bold text-xl text-primary">Narendra Media</span>
+                    <img src="{{ asset('images/logo.png') }}" alt="Narendra Media" class="h-16 w-auto object-contain bg-white/10 rounded-md p-1.5">
+                    <span class="font-heading font-bold text-2xl text-white">Narendra Media</span>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-6 bg-white shadow-sm border border-surface-border rounded-xl">
+            <div class="w-full sm:max-w-md bg-white border border-surface-border rounded-lg shadow-md p-6 sm:p-8">
                 {{ $slot }}
             </div>
         </div>
