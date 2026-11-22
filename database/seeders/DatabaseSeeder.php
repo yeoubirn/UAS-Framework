@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -33,10 +35,29 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '082198765432',
         ]);
 
-        // 3. Data Layanan (5 Layanan dari BRIEF.md)
+        // 3. Data Kategori (3 Kategori)
+        $catProyektor = Category::create([
+            'nama' => 'Rental Proyektor',
+            'slug' => 'rental-proyektor',
+            'deskripsi' => 'Penyewaan proyektor dan layar untuk berbagai acara indoor maupun outdoor di Tulungagung.',
+        ]);
+
+        $catCctv = Category::create([
+            'nama' => 'Pasang CCTV',
+            'slug' => 'pasang-cctv',
+            'deskripsi' => 'Layanan instalasi kamera pengawas CCTV rumah, toko, dan kantor dengan setting online ke HP.',
+        ]);
+
+        $catWifi = Category::create([
+            'nama' => 'WiFi dan Jaringan',
+            'slug' => 'wifi-dan-jaringan',
+            'deskripsi' => 'Pemasangan router WiFi, instalasi kabel LAN, dan konfigurasi jaringan kantor atau sekolah.',
+        ]);
+
+        // 4. Data Layanan (5 Layanan berelasi ke Category)
         $service1 = Service::create([
+            'category_id' => $catProyektor->id,
             'nama' => 'Rental Proyektor Besar',
-            'kategori' => 'Rental Proyektor',
             'deskripsi' => 'Paket sewa proyektor layar besar 4x3 meter, cocok untuk acara outdoor, pernikahan, dan seminar besar.',
             'harga' => 450000,
             'tipe' => 'sewa',
@@ -44,8 +65,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $service2 = Service::create([
+            'category_id' => $catProyektor->id,
             'nama' => 'Proyektor 1 Arah',
-            'kategori' => 'Rental Proyektor',
             'deskripsi' => 'Sewa proyektor 1 arah dengan layar 3x3 meter, ideal untuk rapat, nobar, dan presentasi indoor.',
             'harga' => 350000,
             'tipe' => 'sewa',
@@ -53,8 +74,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $service3 = Service::create([
+            'category_id' => $catCctv->id,
             'nama' => 'Pasang CCTV Paket Lengkap',
-            'kategori' => 'Pasang CCTV',
             'deskripsi' => 'Instalasi paket CCTV lengkap (unit kamera, DVR, kabel, setting online ke HP). Mulai harga Rp 950.000.',
             'harga' => 950000,
             'tipe' => 'jasa',
@@ -62,8 +83,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $service4 = Service::create([
+            'category_id' => $catCctv->id,
             'nama' => 'Jasa Pasang CCTV',
-            'kategori' => 'Pasang CCTV',
             'deskripsi' => 'Jasa instalasi kamera CCTV dan penarikan kabel (per titik).',
             'harga' => 200000,
             'tipe' => 'jasa',
@@ -71,19 +92,18 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $service5 = Service::create([
+            'category_id' => $catWifi->id,
             'nama' => 'Pasang WiFi dan Jaringan Kantor/Sekolah',
-            'kategori' => 'WiFi dan Jaringan',
             'deskripsi' => 'Pemasangan dan konfigurasi jaringan internet kabel LAN dan router WiFi untuk instansi, kantor, atau sekolah.',
             'harga' => 350000,
             'tipe' => 'jasa',
             'gambar' => null,
         ]);
 
-        // 4. Dua Pesanan Contoh dengan Status Berbeda
-        Order::create([
+        // 5. Dua Transaksi Header-Detail Contoh dengan Status Berbeda
+        $order1 = Order::create([
+            'nomor_pesanan' => 'ORD-20261110-001',
             'user_id' => $customer->id,
-            'service_id' => $service1->id,
-            'jumlah' => 1,
             'tanggal' => '2026-11-10',
             'alamat' => 'Bulu, Tanggulwelahan, Kec. Besuki, Kabupaten Tulungagung',
             'catatan' => 'Acara pertemuan warga mulai pukul 19.00 WIB',
@@ -91,15 +111,30 @@ class DatabaseSeeder extends Seeder
             'total' => 450000,
         ]);
 
-        Order::create([
-            'user_id' => $customer->id,
-            'service_id' => $service5->id,
+        OrderDetail::create([
+            'order_id' => $order1->id,
+            'service_id' => $service1->id,
             'jumlah' => 1,
+            'harga_satuan' => 450000,
+            'subtotal' => 450000,
+        ]);
+
+        $order2 = Order::create([
+            'nomor_pesanan' => 'ORD-20261112-002',
+            'user_id' => $customer->id,
             'tanggal' => '2026-11-12',
             'alamat' => 'Jl. Raya Besuki No. 25, Kec. Besuki, Kabupaten Tulungagung',
             'catatan' => 'Pemasangan router di lantai 2 gedung sekolah',
             'status' => 'dikonfirmasi',
             'total' => 350000,
+        ]);
+
+        OrderDetail::create([
+            'order_id' => $order2->id,
+            'service_id' => $service5->id,
+            'jumlah' => 1,
+            'harga_satuan' => 350000,
+            'subtotal' => 350000,
         ]);
     }
 }

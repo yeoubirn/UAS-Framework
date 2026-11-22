@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
@@ -16,8 +17,8 @@ class Service extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'category_id',
         'nama',
-        'kategori',
         'deskripsi',
         'harga',
         'tipe',
@@ -37,10 +38,26 @@ class Service extends Model
     }
 
     /**
-     * A service has many orders.
+     * A service belongs to a category.
      */
-    public function orders(): HasMany
+    public function category(): BelongsTo
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Accessor for category name to maintain backward compatibility with views.
+     */
+    public function getKategoriAttribute(): string
+    {
+        return $this->category?->nama ?? 'Umum';
+    }
+
+    /**
+     * A service has many order details.
+     */
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(OrderDetail::class);
     }
 }

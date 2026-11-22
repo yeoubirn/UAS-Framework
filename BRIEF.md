@@ -25,13 +25,20 @@ jadi fokus pada kode yang bersih dan mudah dijelaskan, bukan fitur yang banyak.
 
 ## Di luar lingkup (JANGAN dibuat)
 Keranjang, checkout multi-item, cek bentrok jadwal, statistik/grafik, pencarian dan filter,
-tabel kategori terpisah, upload foto, payment gateway, notifikasi, pelacakan tanpa login.
+upload foto, payment gateway, notifikasi, pelacakan tanpa login.
 
-## Tabel (3 saja)
-- users: name, email, password, role (admin/pelanggan, default pelanggan), no_hp
-- services: nama, kategori (teks: Rental Proyektor/Pasang CCTV/WiFi dan Jaringan), deskripsi, harga, tipe (sewa/jasa), gambar (path teks di public/images)
-- orders: user_id, service_id, jumlah, tanggal (tanggal pakai/pasang), alamat, catatan, status (pending/dikonfirmasi/selesai/ditolak), total
-Relasi: user hasMany orders; service hasMany orders; order belongsTo user dan service.
+## Tabel (5 Tabel - Sesuai Ketentuan Tugas & Relasi Transaksi Header-Detail)
+1. users: name, email, password, role (admin/pelanggan, default pelanggan), no_hp
+2. categories: nama, slug, deskripsi
+3. services: category_id, nama, deskripsi, harga, tipe (sewa/jasa), gambar (path teks di public/images)
+4. orders (Header Transaksi): nomor_pesanan, user_id, tanggal (tanggal pakai/pasang), alamat, catatan, status (pending/dikonfirmasi/selesai/ditolak), total
+5. order_details (Detail Transaksi): order_id, service_id, jumlah, harga_satuan, subtotal
+
+Relasi:
+- category hasMany services; service belongsTo category
+- user hasMany orders; order belongsTo user
+- order hasMany order_details; order_detail belongsTo order
+- service hasMany order_details; order_detail belongsTo service
 
 ## Karakter visual
 Profesional, bersih, modern, ramah. Mobile-first.

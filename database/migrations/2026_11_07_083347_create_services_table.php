@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('nama');
-            $table->string('kategori'); // Rental Proyektor / Pasang CCTV / WiFi dan Jaringan
             $table->text('deskripsi');
             $table->decimal('harga', 12, 2);
             $table->string('tipe'); // sewa / jasa

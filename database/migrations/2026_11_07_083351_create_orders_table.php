@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('nomor_pesanan')->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('service_id')->constrained()->cascadeOnDelete();
-            $table->integer('jumlah')->default(1);
             $table->date('tanggal'); // tanggal pakai/pasang
             $table->text('alamat');
             $table->text('catatan')->nullable();

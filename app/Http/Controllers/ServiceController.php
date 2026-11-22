@@ -13,7 +13,7 @@ class ServiceController extends Controller
     public function index(): View
     {
         $servicesByCategory = \Illuminate\Support\Facades\Schema::hasTable('services')
-            ? Service::all()->groupBy('kategori')
+            ? Service::with('category')->get()->groupBy(fn($service) => $service->category->nama ?? 'Lainnya')
             : collect();
 
         return view('welcome', compact('servicesByCategory'));
