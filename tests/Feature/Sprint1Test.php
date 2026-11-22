@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Service;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -33,7 +35,7 @@ class Sprint1Test extends TestCase
         $this->assertFalse($user->isAdmin());
     }
 
-    public function test_seeder_populates_admin_customer_services_and_orders(): void
+    public function test_seeder_populates_admin_customer_categories_services_and_orders(): void
     {
         $this->seed(DatabaseSeeder::class);
 
@@ -48,42 +50,25 @@ class Sprint1Test extends TestCase
         $this->assertNotNull($customer);
         $this->assertEquals('pelanggan', $customer->role);
 
-        // Check 5 services from BRIEF.md
+        // Check 3 categories
+        $this->assertEquals(3, Category::count());
+        $this->assertDatabaseHas('categories', ['nama' => 'Rental Proyektor']);
+        $this->assertDatabaseHas('categories', ['nama' => 'Pasang CCTV']);
+        $this->assertDatabaseHas('categories', ['nama' => 'WiFi dan Jaringan']);
+
+        // Check 5 services
         $this->assertEquals(5, Service::count());
         $this->assertDatabaseHas('services', [
             'nama' => 'Rental Proyektor Besar',
-            'kategori' => 'Rental Proyektor',
             'harga' => 450000,
             'tipe' => 'sewa',
         ]);
-        $this->assertDatabaseHas('services', [
-            'nama' => 'Proyektor 1 Arah',
-            'kategori' => 'Rental Proyektor',
-            'harga' => 350000,
-            'tipe' => 'sewa',
-        ]);
-        $this->assertDatabaseHas('services', [
-            'nama' => 'Pasang CCTV Paket Lengkap',
-            'kategori' => 'Pasang CCTV',
-            'harga' => 950000,
-            'tipe' => 'jasa',
-        ]);
-        $this->assertDatabaseHas('services', [
-            'nama' => 'Jasa Pasang CCTV',
-            'kategori' => 'Pasang CCTV',
-            'harga' => 200000,
-            'tipe' => 'jasa',
-        ]);
-        $this->assertDatabaseHas('services', [
-            'nama' => 'Pasang WiFi dan Jaringan Kantor/Sekolah',
-            'kategori' => 'WiFi dan Jaringan',
-            'harga' => 350000,
-            'tipe' => 'jasa',
-        ]);
 
-        // Check 2 sample orders with different status
+        // Check 2 sample orders and details (Master-Detail)
         $this->assertEquals(2, Order::count());
-        $orders = Order::with(['user', 'service'])->get();
+        $this->assertEquals(2, OrderDetail::count());
+
+        $orders = Order::with(['user', 'orderDetails.service'])->get();
         $this->assertCount(2, $orders);
 
         $statuses = $orders->pluck('status')->unique();
@@ -92,22 +77,35 @@ class Sprint1Test extends TestCase
         // Test relationships
         $order = $orders->first();
         $this->assertInstanceOf(User::class, $order->user);
-        $this->assertInstanceOf(Service::class, $order->service);
         $this->assertTrue($order->user->orders->contains($order));
-        $this->assertTrue($order->service->orders->contains($order));
+
+        $detail = $order->orderDetails->first();
+        $this->assertInstanceOf(OrderDetail::class, $detail);
+        $this->assertInstanceOf(Service::class, $detail->service);
     }
 
     public function test_components_render_properly(): void
     {
-        $badgePending = $this->blade('<x-status-badge status="pending" />');
-        $badgePending->assertSee('Pending');
+        $this->seed(DatabaseSeeder::class);
 
-        $badgeDikonfirmasi = $this->blade('<x-status-badge status="dikonfirmasi" />');
-        $badgeDikonfirmasi->assertSee('Dikonfirmasi');
+        // Test status badge component
+        $pendingBadge = $this->blade('<x-status-badge status="pending" />');
+        $pendingBadge->assertSee('Pending');
 
+        $confirmedBadge = $this->blade('<x-status-badge status="dikonfirmasi" />');
+        $confirmedBadge->assertSee('Dikonfirmasi');
+
+        $completedBadge = $this->blade('<x-status-badge status="selesai" />');
+        $completedBadge->assertSee('Selesai');
+
+        $rejectedBadge = $this->blade('<x-status-badge status="ditolak" />');
+        $rejectedBadge->assertSee('Ditolak');
+
+        // Test footer component
         $footer = $this->blade('<x-footer />');
-        $footer->assertSee('ekowawan818@gmail.com');
-        $footer->assertSee('Tulungagung');
+        $footer->assertSee('Narendra Media');
         $footer->assertSee('Buka 24 Jam');
+        $footer->assertSee('ekowawan818@gmail.com');
+        $footer->assertSee('Besuki, Kabupaten Tulungagung');
     }
 }

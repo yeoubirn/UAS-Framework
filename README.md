@@ -2,7 +2,7 @@
 
 Aplikasi web profil usaha, katalog layanan, dan pemesanan online untuk **Narendra Media** — usaha jasa dan rental multimedia (rental proyektor, pemasangan CCTV, serta instalasi WiFi & jaringan internet perkantoran dan sekolah) di Tulungagung, Jawa Timur.
 
-Proyek ini dikembangkan sebagai Tugas UAS **Workshop Pemrograman Framework** dengan prinsip kode yang sederhana, bersih, dan mudah dijelaskan oleh mahasiswa.
+Proyek ini dikembangkan sebagai Tugas UAS **Workshop Pemrograman Framework** dengan prinsip kode yang sederhana, bersih, terstruktur, dan mudah dijelaskan oleh mahasiswa.
 
 ---
 
@@ -15,30 +15,48 @@ Proyek ini dikembangkan sebagai Tugas UAS **Workshop Pemrograman Framework** den
 
 ---
 
+## 🗄️ Arsitektur Database (5 Tabel & Transaksi Header-Detail)
+
+Aplikasi ini memenuhi ketentuan tugas minimal **5 Tabel** dan struktur **Transaksi Master-Detail (Header-Detail)**:
+
+1. **`users`** *(Master)*: Mengelola data pengguna (nama, email, password, nomor HP, peran `admin` atau `pelanggan`).
+2. **`categories`** *(Master)*: Mengelompokkan jenis layanan (`nama`, `slug`, `deskripsi`).
+3. **`services`** *(Master)*: Daftar paket jasa/rental yang berelasi ke `categories` (`category_id`, `nama`, `deskripsi`, `harga`, `tipe`, `gambar`).
+4. **`orders`** *(Header Transaksi)*: Menyimpan data umum transaksi (`nomor_pesanan`, `user_id`, `tanggal`, `alamat`, `catatan`, `status`, `total`).
+5. **`order_details`** *(Detail Transaksi)*: Menyimpan rincian item layanan dalam setiap transaksi (`order_id`, `service_id`, `jumlah`, `harga_satuan`, `subtotal`).
+
+### Relasi Eloquent:
+- `Category` **hasMany** `Service` / `Service` **belongsTo** `Category`
+- `User` **hasMany** `Order` / `Order` **belongsTo** `User`
+- `Order` **hasMany** `OrderDetail` / `OrderDetail` **belongsTo** `Order`
+- `Service` **hasMany** `OrderDetail` / `OrderDetail` **belongsTo** `Service`
+
+---
+
 ## ✨ Fitur Utama
+
 1. **Autentikasi & Multi-role:**
    - Registrasi dan Login dengan dua peran: **Admin** dan **Pelanggan**.
    - Input nomor HP saat registrasi.
-   - Hak akses rute dan menu navbar yang terisolasi sesuai peran.
+   - Hak akses rute dan menu navigasi yang terisolasi sesuai peran.
 2. **Katalog Layanan (Beranda):**
    - Halaman beranda `/` menyajikan daftar layanan yang dikelompokkan per kategori (*Rental Proyektor*, *Pasang CCTV*, *WiFi dan Jaringan*).
    - Menggunakan komponen kartu `<x-service-card>` yang memuat gambar/ilustrasi, nama layanan, badge kategori, tipe layanan, deskripsi singkat, tarif harga, dan tombol "Lihat Detail".
 3. **Detail Layanan & Form Pemesanan Langsung:**
-   - Halaman `/layanan/{service}` menampilkan deskripsi lengkap layanan, tarif satuan, dan formulir pemesanan online (satu pesanan = satu layanan).
+   - Halaman `/layanan/{service}` menampilkan deskripsi lengkap layanan, tarif satuan, dan formulir pemesanan online.
    - Form pemesanan mencakup input jumlah unit, tanggal pelaksanaan/pemasangan, alamat lengkap, dan catatan opsional.
-   - Hanya user yang login yang dapat memesan. Pengunjung yang belum login akan diarahkan untuk masuk ke akun terlebih dahulu.
-   - Validasi data menggunakan Form Request (`StoreOrderRequest`).
-   - Total biaya pesanan dihitung secara aman di sisi server (`harga x jumlah`).
-   - Status awal pesanan otomatis diatur ke `pending`.
+   - Validasi menggunakan Form Request (`StoreOrderRequest`).
+   - Setiap transaksi membuat nota pesanan unik (`nomor_pesanan`), header transaksi (`orders`), dan detail transaksi (`order_details`).
+   - Status awal transaksi otomatis diatur ke `pending`.
 4. **Halaman "Pesanan Saya":**
-   - Halaman `/pesanan-saya` bagi pelanggan untuk memantau status pesanan pribadi secara real-time.
+   - Halaman `/pesanan-saya` bagi pelanggan untuk memantau status pesanan dan rincian transaksi (nomor invoice, rincian unit & subtotal, tanggal pelaksanaan, dan status).
    - Dilengkapi badge status berwarna (*Pending*, *Dikonfirmasi*, *Selesai*, *Ditolak*).
-   - Privasi dan keamanan data terjamin: pelanggan hanya dapat melihat pesanannya sendiri dan tidak dapat melihat pesanan pelanggan lain.
-   - Tombol menu navigasi **"Pesanan Saya"** tersedia di navbar khusus pelanggan.
-5. **Panel Admin - CRUD Layanan:**
-   - Admin dapat menambah layanan baru, mengubah data layanan, melihat daftar layanan, dan menghapus layanan.
-6. **Panel Admin - Kelola Pesanan:**
-   - Admin dapat melihat seluruh daftar pesanan pelanggan yang masuk beserta detailnya, serta memperbarui status pesanan (*Pending*, *Dikonfirmasi*, *Selesai*, *Ditolak*).
+   - Tombol konfirmasi cepat via WhatsApp langsung dengan referensi nomor pesanan.
+   - Keamanan data terjamin: pelanggan hanya dapat melihat transaksinya sendiri.
+5. **Panel Admin - CRUD Layanan & Kategori:**
+   - Admin dapat menambah, mengubah, melihat, dan menghapus layanan dengan relasi dinamis ke tabel kategori.
+6. **Panel Admin - Kelola Transaksi Pesanan:**
+   - Admin dapat melihat seluruh daftar pesanan pelanggan yang masuk beserta rincian item dari tabel `order_details`, serta memperbarui status transaksi.
 
 ---
 
@@ -74,7 +92,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek di lingkungan lokal:
 
 5. **Jalankan migrasi database beserta seeder awal:**
    ```bash
-   php artisan migrate --seed
+   php artisan migrate:fresh --seed
    ```
 
 6. **Pasang dependensi frontend:**
@@ -110,10 +128,10 @@ Database seeder telah menyediakan dua akun demo siap pakai:
 
 ## 🧪 Menjalankan Pengujian (Testing)
 
-Untuk memastikan seluruh fitur dan spesifikasi berjalan normal, jalankan perintah pengujian:
+Untuk memastikan seluruh 50 unit & feature test berjalan normal:
 
 ```bash
-php artisan test
+php vendor/bin/phpunit
 ```
 
 ---

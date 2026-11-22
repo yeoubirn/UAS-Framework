@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Service;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -94,7 +95,7 @@ class Sprint3Test extends TestCase
         ]);
     }
 
-    public function test_authenticated_user_can_place_order_with_server_calculated_total_and_pending_status(): void
+    public function test_authenticated_user_can_place_order_with_header_detail_transaction(): void
     {
         $payload = [
             'jumlah' => 3,
@@ -112,15 +113,22 @@ class Sprint3Test extends TestCase
         // Total dihitung di server: 450.000 x 3 = 1.350.000
         $expectedTotal = $this->service->harga * 3;
 
+        // 1. Cek Header Transaksi (Order)
         $this->assertDatabaseHas('orders', [
             'user_id' => $this->customer->id,
-            'service_id' => $this->service->id,
-            'jumlah' => 3,
             'tanggal' => '2026-11-25 00:00:00',
             'alamat' => 'Jalan Pahlawan No. 45, Kedungwaru, Tulungagung',
             'catatan' => 'Harap konfirmasi kedatangan 1 jam sebelumnya.',
             'status' => 'pending',
             'total' => $expectedTotal,
+        ]);
+
+        // 2. Cek Detail Transaksi (OrderDetail)
+        $this->assertDatabaseHas('order_details', [
+            'service_id' => $this->service->id,
+            'jumlah' => 3,
+            'harga_satuan' => $this->service->harga,
+            'subtotal' => $expectedTotal,
         ]);
     }
 
@@ -162,14 +170,21 @@ class Sprint3Test extends TestCase
 
         // Buat pesanan khusus milik siti
         $otherOrder = Order::create([
+            'nomor_pesanan' => 'ORD-TEST-9999',
             'user_id' => $otherCustomer->id,
-            'service_id' => $this->service->id,
-            'jumlah' => 5,
             'tanggal' => '2026-12-01',
             'alamat' => 'Alamat Rahasia Milik Siti Tulungagung',
             'catatan' => 'Catatan Rahasia Siti',
             'status' => 'pending',
             'total' => 2250000,
+        ]);
+
+        OrderDetail::create([
+            'order_id' => $otherOrder->id,
+            'service_id' => $this->service->id,
+            'jumlah' => 5,
+            'harga_satuan' => 450000,
+            'subtotal' => 2250000,
         ]);
 
         // Login sebagai customer pertama (Budi)

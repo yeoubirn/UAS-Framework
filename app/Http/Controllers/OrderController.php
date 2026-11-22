@@ -17,7 +17,7 @@ class OrderController extends Controller
     {
         $orders = $request->user()
             ->orders()
-            ->with('service')
+            ->with(['orderDetails.service.category'])
             ->latest()
             ->get();
 
@@ -32,9 +32,12 @@ class OrderController extends Controller
         $validated = $request->validated();
         $total = $service->harga * $validated['jumlah'];
 
-        $request->user()->orders()->create([
-            'service_id' => $service->id,
-            'jumlah' => $validated['jumlah'],
+        // Format nomor pesanan unik: ORD-YYYYMMDD-XXXX
+        $nomorPesanan = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
+
+        // 1. Simpan Header Transaksi (Order)
+        $order = $request->user()->orders()->create([
+            'nomor_pesanan' => $nomorPesanan,
             'tanggal' => $validated['tanggal'],
             'alamat' => $validated['alamat'],
             'catatan' => $validated['catatan'] ?? null,
@@ -42,8 +45,16 @@ class OrderController extends Controller
             'total' => $total,
         ]);
 
+        // 2. Simpan Detail Transaksi (OrderDetail)
+        $order->orderDetails()->create([
+            'service_id' => $service->id,
+            'jumlah' => $validated['jumlah'],
+            'harga_satuan' => $service->harga,
+            'subtotal' => $total,
+        ]);
+
         return redirect()
             ->route('orders.my')
-            ->with('success', 'Pesanan untuk ' . $service->nama . ' berhasil dibuat!');
+            ->with('success', 'Pesanan (' . $nomorPesanan . ') untuk layanan ' . $service->nama . ' berhasil dibuat!');
     }
 }
