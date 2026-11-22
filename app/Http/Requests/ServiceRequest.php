@@ -22,8 +22,8 @@ class ServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'category_id' => ['required', 'exists:categories,id'],
             'nama' => ['required', 'string', 'max:255'],
-            'kategori' => ['required', 'string', 'in:Rental Proyektor,Pasang CCTV,WiFi dan Jaringan'],
             'deskripsi' => ['required', 'string'],
             'harga' => ['required', 'numeric', 'min:0'],
             'tipe' => ['required', 'string', 'in:sewa,jasa'],
@@ -39,8 +39,8 @@ class ServiceRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'category_id' => 'kategori layanan',
             'nama' => 'nama layanan',
-            'kategori' => 'kategori layanan',
             'deskripsi' => 'deskripsi layanan',
             'harga' => 'harga layanan',
             'tipe' => 'tipe layanan',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRequest;
+use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -11,31 +12,29 @@ use Illuminate\View\View;
 class ServiceController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the services.
      */
     public function index(): View
     {
-        $services = Service::latest()->paginate(10);
+        $services = Service::with('category')->latest()->paginate(10);
+        $totalServices = Service::count();
+        $totalCategories = Category::count();
 
-        return view('admin.services.index', compact('services'));
+        return view('admin.services.index', compact('services', 'totalServices', 'totalCategories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new service.
      */
     public function create(): View
     {
-        $categories = [
-            'Rental Proyektor',
-            'Pasang CCTV',
-            'WiFi dan Jaringan',
-        ];
+        $categories = Category::orderBy('nama')->get();
 
         return view('admin.services.create', compact('categories'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created service in storage.
      */
     public function store(ServiceRequest $request): RedirectResponse
     {
@@ -47,7 +46,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified service.
      */
     public function show(Service $service): RedirectResponse
     {
@@ -55,21 +54,17 @@ class ServiceController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified service.
      */
     public function edit(Service $service): View
     {
-        $categories = [
-            'Rental Proyektor',
-            'Pasang CCTV',
-            'WiFi dan Jaringan',
-        ];
+        $categories = Category::orderBy('nama')->get();
 
         return view('admin.services.edit', compact('service', 'categories'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified service in storage.
      */
     public function update(ServiceRequest $request, Service $service): RedirectResponse
     {
@@ -81,7 +76,7 @@ class ServiceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified service from storage.
      */
     public function destroy(Service $service): RedirectResponse
     {

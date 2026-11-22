@@ -15,7 +15,7 @@ class OrderController extends Controller
      */
     public function index(): View
     {
-        $orders = Order::with(['user', 'service'])->latest()->paginate(10);
+        $orders = Order::with(['user', 'orderDetails.service.category'])->latest()->paginate(10);
 
         $statuses = [
             'pending' => 'Pending',
@@ -24,7 +24,14 @@ class OrderController extends Controller
             'ditolak' => 'Ditolak',
         ];
 
-        return view('admin.orders.index', compact('orders', 'statuses'));
+        $counts = [
+            'total' => Order::count(),
+            'pending' => Order::where('status', 'pending')->count(),
+            'dikonfirmasi' => Order::where('status', 'dikonfirmasi')->count(),
+            'selesai' => Order::where('status', 'selesai')->count(),
+        ];
+
+        return view('admin.orders.index', compact('orders', 'statuses', 'counts'));
     }
 
     /**
@@ -40,6 +47,8 @@ class OrderController extends Controller
             'status' => $validated['status'],
         ]);
 
-        return back()->with('success', 'Status pesanan #' . $order->id . ' berhasil diubah menjadi ' . ucfirst($validated['status']) . '.');
+        $label = $order->nomor_pesanan ?: '#' . $order->id;
+
+        return back()->with('success', 'Status pesanan ' . $label . ' berhasil diubah menjadi ' . ucfirst($validated['status']) . '.');
     }
 }

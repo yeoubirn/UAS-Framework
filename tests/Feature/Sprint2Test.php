@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\User;
@@ -87,9 +88,11 @@ class Sprint2Test extends TestCase
 
     public function test_admin_can_store_new_service_with_validation(): void
     {
+        $category = Category::first();
+
         $payload = [
             'nama' => 'Paket Sewa Proyektor Mini',
-            'kategori' => 'Rental Proyektor',
+            'category_id' => $category->id,
             'deskripsi' => 'Cocok untuk rapat kecil 10-20 orang.',
             'harga' => 250000,
             'tipe' => 'sewa',
@@ -102,7 +105,7 @@ class Sprint2Test extends TestCase
         $response->assertSessionHas('success');
         $this->assertDatabaseHas('services', [
             'nama' => 'Paket Sewa Proyektor Mini',
-            'kategori' => 'Rental Proyektor',
+            'category_id' => $category->id,
             'harga' => 250000,
         ]);
     }
@@ -111,19 +114,20 @@ class Sprint2Test extends TestCase
     {
         $invalidPayload = [
             'nama' => '',
-            'kategori' => 'Kategori Tidak Ada',
+            'category_id' => 999999, // ID kategori tidak ada
             'deskripsi' => '',
             'harga' => 'bukan-angka',
             'tipe' => 'invalid-tipe',
         ];
 
         $response = $this->actingAs($this->admin)->post('/admin/services', $invalidPayload);
-        $response->assertSessionHasErrors(['nama', 'kategori', 'deskripsi', 'harga', 'tipe']);
+        $response->assertSessionHasErrors(['nama', 'category_id', 'deskripsi', 'harga', 'tipe']);
     }
 
     public function test_admin_can_edit_and_update_service(): void
     {
         $service = Service::first();
+        $newCategory = Category::where('id', '!=', $service->category_id)->first() ?? Category::first();
 
         $response = $this->actingAs($this->admin)->get('/admin/services/' . $service->id . '/edit');
         $response->assertStatus(200);
@@ -131,7 +135,7 @@ class Sprint2Test extends TestCase
 
         $updatePayload = [
             'nama' => 'Layanan Update Nama',
-            'kategori' => 'Pasang CCTV',
+            'category_id' => $newCategory->id,
             'deskripsi' => 'Deskripsi layanan yang telah diperbarui.',
             'harga' => 999000,
             'tipe' => 'jasa',
@@ -144,6 +148,7 @@ class Sprint2Test extends TestCase
 
         $this->assertDatabaseHas('services', [
             'id' => $service->id,
+            'category_id' => $newCategory->id,
             'nama' => 'Layanan Update Nama',
             'harga' => 999000,
         ]);
@@ -151,9 +156,11 @@ class Sprint2Test extends TestCase
 
     public function test_admin_can_delete_service(): void
     {
+        $category = Category::first();
+
         $newService = Service::create([
+            'category_id' => $category->id,
             'nama' => 'Layanan Mau Dihapus',
-            'kategori' => 'WiFi dan Jaringan',
             'deskripsi' => 'Deskripsi layanan sementara.',
             'harga' => 100000,
             'tipe' => 'jasa',
