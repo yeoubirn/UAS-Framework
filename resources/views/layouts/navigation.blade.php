@@ -43,7 +43,13 @@
                             <button class="inline-flex items-center gap-2 px-3 py-2 border border-surface-border text-sm leading-4 font-medium rounded-md text-navy bg-white hover:bg-sky-50/50 focus:outline-none transition ease-in-out duration-150 max-w-[220px]">
                                 <div class="text-left min-w-0 flex-1">
                                     <div class="font-semibold truncate max-w-[140px] text-navy">{{ Auth::user()->name }}</div>
-                                    <div class="text-xs text-content-secondary capitalize">{{ Auth::user()->role }}</div>
+                                    <div class="text-[11px] text-content-secondary flex items-center gap-1.5 mt-0.5">
+                                        @if (Auth::user()->isAdmin())
+                                            <span class="inline-block px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-semibold text-[10px]">Admin</span>
+                                        @else
+                                            <span class="inline-block px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 font-semibold text-[10px]">Pelanggan</span>
+                                        @endif
+                                    </div>
                                 </div>
 
                                 <svg class="fill-current h-4 w-4 text-content-secondary shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
